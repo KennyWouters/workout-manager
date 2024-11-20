@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
     // Config options here
     output: 'export',
+    assetPrefix: '/',
 };
 
 export default nextConfig;
