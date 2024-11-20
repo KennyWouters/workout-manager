@@ -29,8 +29,24 @@ const exerciseCategories = [
     'Free Weights'
 ];
 
+interface Exercise {
+    name: string;
+    sets: number;
+    reps: string;
+    category: string;
+}
+
+interface WorkoutDay {
+    focus: string;
+    exercises: Exercise[];
+}
+
+interface WorkoutData {
+    [key: string]: WorkoutDay;
+}
+
 const WorkoutManager = () => {
-    const [workoutData, setWorkoutData] = useState({
+    const [workoutData, setWorkoutData] = useState<WorkoutData>({
         'Day 1: Upper Body Push': {
             focus: 'Chest, Shoulders, Triceps',
             exercises: [
@@ -75,24 +91,24 @@ const WorkoutManager = () => {
         }
     });
 
-    const [selectedDay, setSelectedDay] = useState(Object.keys(workoutData)[0]);
-    const [editingExercise, setEditingExercise] = useState(null);
-    const [newExercise, setNewExercise] = useState({
+    const [selectedDay, setSelectedDay] = useState<string>(Object.keys(workoutData)[0]);
+    const [editingExercise, setEditingExercise] = useState<number | null>(null);
+    const [newExercise, setNewExercise] = useState<Exercise>({
         name: '',
-        sets: '',
+        sets: 0,
         reps: '',
         category: ''
     });
-    const [newDay, setNewDay] = useState({ name: '', focus: '' });
+    const [newDay, setNewDay] = useState<{ name: string; focus: string }>({ name: '', focus: '' });
 
-    const handleUpdateExercise = (index, updatedExercise) => {
+    const handleUpdateExercise = (index: number, updatedExercise: Exercise) => {
         const updatedData = { ...workoutData };
         updatedData[selectedDay].exercises[index] = updatedExercise;
         setWorkoutData(updatedData);
         setEditingExercise(null);
     };
 
-    const handleDeleteExercise = (index) => {
+    const handleDeleteExercise = (index: number) => {
         const updatedData = { ...workoutData };
         updatedData[selectedDay].exercises.splice(index, 1);
         setWorkoutData(updatedData);
@@ -103,12 +119,12 @@ const WorkoutManager = () => {
             const updatedData = { ...workoutData };
             updatedData[selectedDay].exercises.push({
                 name: newExercise.name,
-                sets: parseInt(newExercise.sets),
+                sets: parseInt(newExercise.sets.toString()),
                 reps: newExercise.reps,
                 category: newExercise.category
             });
             setWorkoutData(updatedData);
-            setNewExercise({ name: '', sets: '', reps: '', category: '' });
+            setNewExercise({ name: '', sets: 0, reps: '', category: '' });
         }
     };
 
@@ -126,7 +142,7 @@ const WorkoutManager = () => {
         }
     };
 
-    const handleDeleteDay = (day) => {
+    const handleDeleteDay = (day: string) => {
         const updatedData = { ...workoutData };
         delete updatedData[day];
         setWorkoutData(updatedData);
@@ -316,7 +332,7 @@ const WorkoutManager = () => {
                                                     className="w-20"
                                                     value={newExercise.sets}
                                                     onChange={(e) =>
-                                                        setNewExercise({ ...newExercise, sets: e.target.value })
+                                                        setNewExercise({ ...newExercise, sets: parseInt(e.target.value) })
                                                     }
                                                 />
                                                 <Input
